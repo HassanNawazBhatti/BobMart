@@ -1,0 +1,66 @@
+@model IEnumerable<BobMart.Models.Order>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="text-primary-custom mb-4 border-bottom border-secondary pb-2"><i class="fa-solid fa-hammer"></i> Dashboard
+</h2>
+
+<div class="row mb-5">
+    <div class="col-md-3">
+        <div class="card bg-card-custom border-primary text-center p-3 shadow-sm">
+            <h1 class="text-primary-custom display-4">@ViewBag.TotalProducts</h1>
+            <p class="text-muted mb-0">Total Products</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card-custom border-success text-center p-3 shadow-sm">
+            <h1 class="text-success display-4">@ViewBag.TotalOrders</h1>
+            <p class="text-muted mb-0">Total Orders</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card-custom border-warning text-center p-3 shadow-sm">
+            <h1 class="text-warning display-4">@ViewBag.TotalUsers</h1>
+            <p class="text-muted mb-0">Registered Users</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-card-custom border-info text-center p-3 shadow-sm">
+            <h2 class="text-info mt-3">Rs. @((decimal)(ViewBag.TotalRevenue ?? 0))</h2>
+            <p class="text-muted mb-0">Total Revenue</p>
+        </div>
+    </div>
+</div>
+
+<h4 class="text-light mb-3">Recent Orders</h4>
+<div class="card bg-card-custom border-secondary">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@order.User?.Email</td>
+                            <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                            <td><span class="badge bg-primary">@order.Status</span></td>
+                            <td>Rs. @order.TotalAmount.ToString("0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

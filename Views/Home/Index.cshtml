@@ -1,0 +1,105 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="hero-section rounded mb-5">
+    <h1 class="display-4 fw-bold text-white mb-3" style="text-shadow: 2px 2px 4px #000;">Welcome to BobMart</h1>
+    <p class="lead text-light mb-4" style="text-shadow: 1px 1px 2px #000;">Discover your aesthetic.</p>
+    <a asp-controller="Products" asp-action="Index" class="btn btn-primary btn-lg px-5 py-3 text-uppercase fw-bold">Shop
+        Now</a>
+    </div>
+
+    @if (ViewBag.Categories != null)
+    {
+        <div class="mb-5 mt-3">
+            <h2 class="text-light mb-4 border-bottom border-secondary pb-2"><i class="fa-solid fa-list"></i> Browse by Category
+            </h2>
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+                @foreach (var cat in ViewBag.Categories)
+                {
+                    <div class="col">
+                        <a asp-controller="Products" asp-action="Index" asp-route-categoryId="@cat.Id" class="category-card">
+                            <h5 class="mb-0">@cat.Name</h5>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.FeaturedProducts != null && ((IEnumerable<dynamic>)ViewBag.FeaturedProducts).Any())
+    {
+        <div class="mb-5">
+            <h2 class="text-primary-custom mb-4 border-bottom border-secondary pb-2"><i class="fa-solid fa-star"></i> Featured
+                Products</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                    @foreach (var item in ViewBag.FeaturedProducts)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm border-0 bg-card-custom">
+                                <div class="product-image-container">
+                                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                                         style="height: 250px; object-fit: cover;">
+                                    <div class="product-overlay">
+                                        <div class="rating">
+                                            @for (int i = 0; i < Math.Round(item.Rating); i++)
+                                            {
+                                                <i class="fa-solid fa-star"></i>
+                                            }
+                                        </div>
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
+                                           class="btn btn-primary btn-sm rounded-pill px-4 py-2 text-uppercase fw-bold shadow">Details</a>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-light mb-1">@item.Name</h5>
+                                    <p class="card-text text-muted small text-truncate-1 mb-0">@item.Description</p>
+                                    <div
+                                        class="d-flex justify-content-between align-items-center mt-3 border-top border-secondary pt-3">
+                                        <span class="h5 mb-0 text-primary-custom fw-bold">Rs. @item.Price.ToString("0.00")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (ViewBag.LatestProducts != null)
+        {
+            <div class="mb-5">
+                <h2 class="text-light mb-4 border-bottom border-secondary pb-2"><i class="fa-solid fa-clock"></i> New Arrivals</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                    @foreach (var item in ViewBag.LatestProducts)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm bg-card-custom">
+                                <div class="product-image-container">
+                                    <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                                         style="height: 250px; object-fit: cover;">
+                                    <div class="product-overlay">
+                                        <div class="rating">
+                                            @for (int i = 0; i < Math.Round(item.Rating); i++)
+                                            {
+                                                <i class="fa-solid fa-star"></i>
+                                            }
+                                        </div>
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
+                                           class="btn btn-primary btn-sm rounded-pill px-4 py-2 text-uppercase fw-bold shadow">Details</a>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-light">@item.Name</h5>
+                                    <p class="card-text text-muted small text-truncate-1 mb-0">@item.Description</p>
+                                    <div
+                                        class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-secondary">
+                                        <span class="fw-bold text-primary-custom h5 mb-0">Rs. @item.Price.ToString("0.00")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }

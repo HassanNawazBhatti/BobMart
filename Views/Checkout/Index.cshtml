@@ -1,0 +1,72 @@
+@model BobMart.ViewModels.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2 class="text-primary-custom mb-4 border-bottom border-secondary pb-2"><i class="fa-solid fa-credit-card"></i> Checkout</h2>
+
+<div class="row">
+    <div class="col-md-7 mb-4">
+        <div class="card bg-card-custom border-secondary p-4">
+            <h4 class="text-light mb-4">Shipping Details</h4>
+            <form asp-action="PlaceOrder" method="post">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="ShippingName" class="form-label text-light"></label>
+                        <input asp-for="ShippingName" class="form-control" />
+                        <span asp-validation-for="ShippingName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="ShippingAddress" class="form-label text-light"></label>
+                        <input asp-for="ShippingAddress" class="form-control" />
+                        <span asp-validation-for="ShippingAddress" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="City" class="form-label text-light"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="PostalCode" class="form-label text-light"></label>
+                        <input asp-for="PostalCode" class="form-control" />
+                        <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Country" class="form-label text-light"></label>
+                        <input asp-for="Country" class="form-control" />
+                        <span asp-validation-for="Country" class="text-danger small"></span>
+                    </div>
+                    
+                    <h4 class="text-light mt-5 mb-3 border-top border-secondary pt-4">Payment Method</h4>
+                    <div class="col-12 mb-4">
+                        <div class="form-check mb-2">
+                            <input asp-for="PaymentMethod" type="radio" value="COD" id="cod" class="form-check-input" checked>
+                            <label class="form-check-label text-light" for="cod">Cash on Delivery (COD)</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="PaymentMethod" type="radio" value="Card" id="card" class="form-check-input" disabled>
+                            <label class="form-check-label text-muted" for="card">Credit Card (Demo Only)</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Place Order - Rs. @ViewBag.CartTotal</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-md-5">
+        <div class="card bg-card-custom border-secondary p-3 shadow text-center text-muted">
+            <i class="fa-solid fa-shield-halved fa-3x mb-3 text-primary-custom mt-3"></i>
+            <h5 class="text-light">Secure Checkout</h5>
+            <p class="small">Your data is fully encrypted and safe. This is a prototype environment.</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

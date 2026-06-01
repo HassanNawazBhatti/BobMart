@@ -1,0 +1,41 @@
+@model IEnumerable<BobMart.Models.Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<h2 class="text-primary-custom mb-4 border-bottom border-secondary pb-2"><i class="fa-solid fa-box-open"></i> Order History</h2>
+
+@if (Model.Any())
+{
+    <div class="row">
+        @foreach (var order in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card bg-card-custom border-secondary h-100">
+                    <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+                        <span class="text-light fw-bold">Order #@order.Id</span>
+                        <span class="badge @(order.Status == BobMart.Models.Enums.OrderStatus.Pending ? "bg-warning text-dark" : "bg-success")">
+                            @order.Status
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-2"><i class="fa-regular fa-calendar"></i> @order.OrderDate.ToString("MMM dd, yyyy")</p>
+                        <p class="text-light mb-3">Total: <span class="fw-bold text-primary-custom">Rs. @order.TotalAmount.ToString("0.00")</span></p>
+                        <p class="text-muted small mb-3">@order.OrderItems.Sum(i => i.Quantity) items</p>
+                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-light w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="fa-solid fa-ghost fa-4x text-muted mb-3"></i>
+        <h3 class="text-light">No orders found</h3>
+        <p class="text-muted mb-4">Your order history is as empty as the void.</p>
+        <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Start Shopping</a>
+    </div>
+}

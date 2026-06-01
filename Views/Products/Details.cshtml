@@ -1,0 +1,121 @@
+@model BobMart.Models.Product
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mt-3 mb-4 bg-card-custom p-2 rounded border border-secondary">
+    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home" class="text-primary-custom text-decoration-none">Home</a></li>
+    <li class="breadcrumb-item"><a asp-action="Index" class="text-primary-custom text-decoration-none">Shop</a></li>
+    <li class="breadcrumb-item active text-light" aria-current="page">@Model.Name</li>
+  </ol>
+</nav>
+
+<div class="row mb-5">
+    <div class="col-md-6 mb-4 mb-md-0">
+        <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded shadow w-100" style="object-fit: cover; max-height: 500px;" />
+    </div>
+    <div class="col-md-6">
+        <h1 class="text-light mb-2">@Model.Name</h1>
+        <p class="text-muted mb-3"><i class="fa-solid fa-tag"></i> @Model.Category?.Name</p>
+        
+        <div class="mb-3 d-flex align-items-center">
+            <div class="text-warning me-2 h5 mb-0">
+                @for(int i = 0; i < Math.Round(Model.Rating); i++) { <i class="fa-solid fa-star"></i> }
+            </div>
+            <span class="text-muted">(@Model.ReviewCount reviews)</span>
+        </div>
+        
+        <h2 class="text-primary-custom fw-bold mb-4">Rs. @Model.Price.ToString("0.00")</h2>
+        
+        <p class="text-light mb-4" style="line-height: 1.6;">@Model.Description</p>
+        
+        <p class="mb-4">
+            <span class="badge @(Model.Stock > 0 ? "bg-success" : "bg-danger")">
+                @(Model.Stock > 0 ? "In Stock" : "Out of Stock")
+            </span>
+        </p>
+
+        <div class="d-flex gap-2 mb-4">
+            @if (Model.Stock > 0)
+            {
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-flex w-50">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="number" name="quantity" value="1" min="1" max="@Model.Stock" class="form-control me-2" style="max-width: 80px;" />
+                    <button type="submit" class="btn btn-primary flex-grow-1"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                </form>
+            }
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <form asp-controller="Wishlist" asp-action="Add" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-outline-light"><i class="fa-solid fa-heart"></i> Wishlist</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+<hr class="border-secondary mb-5" />
+
+<div class="row">
+    <div class="col-md-8">
+        <h3 class="text-light mb-4">Customer Reviews</h3>
+        @if (Model.Reviews != null && Model.Reviews.Any())
+        {
+            foreach (var review in Model.Reviews.OrderByDescending(r => r.DateAdded))
+            {
+                <div class="card bg-card-custom border-secondary mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="card-title text-light mb-0">@(review.User?.FirstName ?? "Anonymous")</h6>
+                            <small class="text-muted">@review.DateAdded.ToString("MMM dd, yyyy")</small>
+                        </div>
+                        <div class="text-warning mb-2">
+                            @for(int i = 0; i < review.Rating; i++) { <i class="fa-solid fa-star small"></i> }
+                        </div>
+                        <p class="card-text text-light">@review.Comment</p>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+        }
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="card bg-card-custom border-secondary mt-4">
+                <div class="card-body">
+                    <h5 class="text-primary-custom mb-3">Write a Review</h5>
+                    <form asp-controller="Reviews" asp-action="AddReview" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label class="form-label text-light">Rating</label>
+                            <select name="rating" class="form-select w-25">
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light">Comment</label>
+                            <textarea name="comment" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="mt-4"><a asp-controller="Account" asp-action="Login" class="text-primary-custom">Log in</a> to write a review.</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,75 @@
+@model BobMart.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-2">
+    <h2 class="text-primary-custom mb-0"><i class="fa-solid fa-file-invoice"></i> Order #@Model.Id</h2>
+    <a asp-action="Index" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Orders</a>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mb-4">
+        <div class="card bg-card-custom border-secondary">
+            <div class="card-header border-secondary">
+                <h5 class="text-light mb-0">Items in Order</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="text-light text-decoration-none">
+                                            @item.Product?.Name
+                                        </a>
+                                    </td>
+                                    <td>Rs. @item.PriceAtPurchase.ToString("0.00")</td>
+                                    <td>@item.Quantity</td>
+                                    <td>Rs. @((item.PriceAtPurchase * item.Quantity).ToString("0.00"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-card-custom border-secondary mb-4">
+            <div class="card-header border-secondary">
+                <h5 class="text-light mb-0">Order Summary</h5>
+            </div>
+            <div class="card-body text-light">
+                <p><strong>Date:</strong> @Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
+                <p><strong>Status:</strong> <span class="badge bg-primary">@Model.Status</span></p>
+                <hr class="border-secondary" />
+                <h4 class="text-primary-custom fw-bold">Total: Rs. @Model.TotalAmount.ToString("0.00")</h4>
+            </div>
+        </div>
+
+        <div class="card bg-card-custom border-secondary">
+            <div class="card-header border-secondary">
+                <h5 class="text-light mb-0">Shipping Information</h5>
+            </div>
+            <div class="card-body text-light small">
+                <p class="mb-1"><strong>@Model.ShippingName</strong></p>
+                <p class="mb-1">@Model.ShippingAddress</p>
+                <p class="mb-1">@Model.ShippingCity, @Model.ShippingPostalCode</p>
+                <p class="mb-0">@Model.ShippingCountry</p>
+            </div>
+        </div>
+    </div>
+</div>
